@@ -23,4 +23,4 @@ jobs:
       - name: Semantic Release
         run: >
           deno run --allow-env --allow-net ./main.ts ${{ github.repository }}
-          --draft -- token ${{ secrets.GITHUB_TOKEN }}
+          --draft --token ${{ secrets.GITHUB_TOKEN }}
