@@ -16,13 +16,13 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.x
+          deno-version: v1.26.0
 
       - name: Install udd
-        run: deno install -A https://deno.land/x/udd/main.ts --name udd
+        run: deno install -A https://deno.land/x/udd@0.7.5/main.ts --name udd
 
       - name: Update dependencies
-        run: udd mod.ts | xargs -I {result} echo "UDD_RESULT={result}" >> $GITHUB_ENV
+        run: udd mod.ts main.ts | xargs -I {result} echo "UDD_RESULT={result}" >> $GITHUB_ENV
 
       - name: Create a pull request
         uses: peter-evans/create-pull-request@v4
@@ -50,10 +50,10 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.x
+          deno-version: v1.26.0
 
       - name: Install udd
-        run: deno install -A https://deno.land/x/udd/main.ts --name udd
+        run: deno install -A https://deno.land/x/udd@0.7.5/main.ts --name udd
 
       - name: Update dependencies
         run: udd test.ts | xargs -I {result} echo "UDD_RESULT={result}" >> $GITHUB_ENV
