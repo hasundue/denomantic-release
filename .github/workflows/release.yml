@@ -21,4 +21,6 @@ jobs:
           deno-version: v1.26.0
 
       - name: Semantic Release
-        run: deno run --allow-env --allow-net ./main.ts ${{ github.repository }} --draft
+        run: >
+          deno run --allow-env --allow-net ./main.ts ${{ github.repository }}
+          --draft -- token ${{ secrets.GITHUB_TOKEN }}

@@ -3,9 +3,11 @@ import { getDefaultChangelog } from "https://deno.land/x/ghlog@0.3.4/mod.ts";
 import { Octokit } from "https://cdn.skypack.dev/@octokit/core@4.0.5?dts";
 import { getNewVersion } from "./mod.ts";
 
-const octokit = new Octokit({ auth: Deno.env.get("GITHUB_TOKEN") });
-
 const args = parse(Deno.args);
+
+const octokit = new Octokit({
+  auth: args.token ?? Deno.env.get("GITHUB_TOKEN"),
+});
 
 if (!args._[0]) {
   console.error("Repository name is required.");
@@ -15,6 +17,7 @@ if (!args._[0]) {
 const [owner, repo] = String(args._[0]).split("/");
 
 const newTag = await getNewVersion(owner, repo);
+console.log(newTag);
 
 if (!newTag) {
   console.log("No relevant commits found.");
@@ -25,6 +28,7 @@ const changeLog = await getDefaultChangelog(
   { name: `${owner}/${repo}` },
   { name: `v${newTag}`, tag: newTag },
 );
+console.log(changeLog);
 
 try {
   const response = await octokit.request(
