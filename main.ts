@@ -7,7 +7,7 @@ const octokit = new Octokit({ auth: Deno.env.get("GITHUB_TOKEN") });
 
 const args = parse(Deno.args);
 
-if (args._[0]) {
+if (!args._[0]) {
   console.error("Repository name is required.");
   Deno.exit(1);
 }
