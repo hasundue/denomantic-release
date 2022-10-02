@@ -26,7 +26,7 @@ if (!newTag) {
 
 const changeLog = await getDefaultChangelog(
   { name: `${owner}/${repo}` },
-  { name: `v${newTag}`, tag: newTag },
+  { tag: newTag },
 );
 console.log(changeLog);
 
@@ -37,12 +37,11 @@ try {
       owner,
       repo,
       tag_name: newTag,
-      name: `v${newTag}`,
       body: changeLog,
       draft: args.draft,
     },
   );
-  console.log(`Release ${response.data.name} has been created.`);
+  console.log(`Release ${response.data.tag_name} has been created.`);
   Deno.exit(0);
 } catch (e) {
   console.error(e);
