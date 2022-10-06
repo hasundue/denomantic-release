@@ -1,4 +1,4 @@
-import { parse } from "https://deno.land/std@0.158.0/flags/mod.ts";
+import { parse } from "https://deno.land/std@0.159.0/flags/mod.ts";
 import { getDefaultChangelog } from "https://deno.land/x/ghlog@0.3.4/mod.ts";
 import { Octokit } from "https://cdn.skypack.dev/@octokit/core@4.0.5?dts";
 import { getNewVersion } from "./mod.ts";
