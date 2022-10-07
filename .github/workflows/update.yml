@@ -21,4 +21,5 @@ jobs:
 
       - name: Run Denopendabot
         run: >
-          deno run -A https://pax.deno.dev/hasundue/denopendabot/cli.ts *.ts
+          deno run -A https://pax.deno.dev/hasundue/denopendabot/cli.ts
+          main.ts mod.ts test.ts
