@@ -1,49 +1,50 @@
-import { parse } from "https://deno.land/std@0.158.0/flags/mod.ts";
+import { Command } from "https://deno.land/x/cliffy@v0.25.1/command/command.ts";
 import { getDefaultChangelog } from "https://deno.land/x/ghlog@0.3.4/mod.ts";
-import { Octokit } from "https://cdn.skypack.dev/@octokit/core@4.0.5?dts";
+import { Octokit } from "https://esm.sh/@octokit/core@4.0.5";
 import { getNewVersion } from "./mod.ts";
 
-const args = parse(Deno.args);
+const { args, options } = await new Command()
+  .name("denomantic-release")
+  .version("0.1.0") // @denopendabot hasundue/denomantic-release
+  .description("Semantic release for Deno projects.")
+  .option("-t --token <token>", "GitHub token.")
+  .option("--draft", "Draft release.")
+  .option("--dry-run", "Don't actually create a release.")
+  .option("--major <...types>", "Types for a major release.", {
+    default: ["BREAKING"],
+  })
+  .option("--minor <...types>", "Types for a minor release.", {
+    default: ["feat"],
+  })
+  .option("--patch <...types>", "Types for a patch release.", {
+    default: ["fix"],
+  })
+  .arguments("<repository>")
+  .parse(Deno.args);
+
+const repository = args[0];
+const [owner, repo] = repository.split("/");
 
 const octokit = new Octokit({
-  auth: args.token ?? Deno.env.get("GITHUB_TOKEN"),
+  auth: options?.token ?? Deno.env.get("GITHUB_TOKEN"),
 });
 
-if (!args._[0]) {
-  console.error("Repository name is required.");
-  Deno.exit(1);
-}
+const tag = await getNewVersion(owner, repo, {
+  types: options,
+});
 
-const [owner, repo] = String(args._[0]).split("/");
-
-const newTag = await getNewVersion(owner, repo);
-console.log(newTag);
-
-if (!newTag) {
-  console.log("No relevant commits found.");
+if (!tag) {
+  console.log("☕ No relevant commits found.");
   Deno.exit(0);
 }
 
-const changeLog = await getDefaultChangelog(
-  { name: `${owner}/${repo}` },
-  { tag: newTag },
+const body = await getDefaultChangelog({ name: `${owner}/${repo}` }, { tag });
+console.log(body);
+
+if (options?.dryRun) Deno.exit(0);
+
+const release = await octokit.request(
+  "POST /repos/{owner}/{repo}/releases",
+  { owner, repo, tag_name: tag, body, draft: options?.draft },
 );
-console.log(changeLog);
-
-try {
-  const response = await octokit.request(
-    "POST /repos/{owner}/{repo}/releases",
-    {
-      owner,
-      repo,
-      tag_name: newTag,
-      body: changeLog,
-      draft: args.draft,
-    },
-  );
-  console.log(`Release ${response.data.tag_name} has been created.`);
-  Deno.exit(0);
-} catch (e) {
-  console.error(e);
-  Deno.exit(1);
-}
+console.log(`🚀 Release ${release.data.tag_name} created.`);

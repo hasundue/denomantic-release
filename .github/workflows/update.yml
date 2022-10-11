@@ -24,4 +24,4 @@ jobs:
           deno run -A https://pax.deno.dev/hasundue/denopendabot/cli.ts
           main.ts mod.ts test.ts
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}

@@ -1,5 +1,6 @@
 {
   "tasks": {
+    "run": "deno run --allow-net --allow-env main.ts",
     "test": "deno test --allow-net --allow-env",
     "dev": "deno fmt && deno lint && deno task test --fail-fast"
   }

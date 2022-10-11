@@ -34,28 +34,49 @@ export async function getLatestRelease(
     );
     return release;
   } catch {
-    return undefined;
+    return null;
   }
 }
 
-export async function getCommits(
+async function getCommits(
   owner: string,
   repo: string,
   base?: string,
 ) {
   if (base) {
-    const response = await octokit.request(
+    const { data } = await octokit.request(
       "GET /repos/{owner}/{repo}/compare/{base}...{head}",
       { owner, repo, base, head: "HEAD" },
     );
-    return response.data.commits.map((entry) => entry.commit);
+    return data.commits.map((entry) => entry.commit);
   } else {
-    const response = await octokit.request(
+    const { data } = await octokit.request(
       "GET /repos/{owner}/{repo}/commits",
       { owner, repo },
     );
-    return response.data.map((entry) => entry.commit);
+    return data.map((entry) => entry.commit);
   }
+}
+
+export function bumpVersion(
+  version: string | semver.SemVer,
+  types: (commit.Field | undefined)[],
+  options: VersioningOptions = defaultVersioningOptions,
+) {
+  const include = (triggers: string[]) => intersect(types, triggers).length;
+
+  if (semver.major(version) === 0) {
+    // an unstable version, for which we do not bump the major version.
+    const triggers = [...options.types.major, ...options.types.minor];
+    if (include(triggers)) return semver.inc(version, "minor");
+  } else {
+    // a stable version.
+    if (include(options.types.major)) return semver.inc(version, "major");
+    if (include(options.types.minor)) return semver.inc(version, "minor");
+  }
+  if (include(options.types.patch)) return semver.inc(version, "patch");
+
+  return version.toString(); // no version bump.
 }
 
 export async function getNewVersion(
@@ -80,25 +101,4 @@ export async function getNewVersion(
   const newVersion = bumpVersion(version, types, options)!;
 
   return semver.gt(newVersion, version) ? newVersion : null;
-}
-
-export function bumpVersion(
-  version: string | semver.SemVer,
-  types: (commit.Field | undefined)[],
-  options: VersioningOptions = defaultVersioningOptions,
-) {
-  const include = (triggers: string[]) => intersect(types, triggers).length;
-
-  if (semver.major(version) === 0) {
-    // an unstable version, for which we do not bump the major version.
-    const triggers = [...options.types.major, ...options.types.minor];
-    if (include(triggers)) return semver.inc(version, "minor");
-  } else {
-    // a stable version.
-    if (include(options.types.major)) return semver.inc(version, "major");
-    if (include(options.types.minor)) return semver.inc(version, "minor");
-  }
-  if (include(options.types.patch)) return semver.inc(version, "patch");
-
-  return version.toString(); // no version bump.
 }
