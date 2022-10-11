@@ -39,12 +39,15 @@ if (!tag) {
 }
 
 const body = await getDefaultChangelog({ name: `${owner}/${repo}` }, { tag });
-console.log(body);
 
-if (options?.dryRun) Deno.exit(0);
+if (options?.dryRun) {
+  console.log(body);
+  Deno.exit(0);
+}
 
 const release = await octokit.request(
   "POST /repos/{owner}/{repo}/releases",
   { owner, repo, tag_name: tag, body, draft: options?.draft },
 );
 console.log(`🚀 Release ${release.data.tag_name} created.`);
+console.log(release.url);
