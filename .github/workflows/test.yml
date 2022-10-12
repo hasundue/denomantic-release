@@ -30,10 +30,10 @@ jobs:
         run: deno lint
 
       - name: Test
-        run: deno task test --coverage=coverage
+        run: deno task test -q --coverage=./coverage
 
       - name: Create coverage report
-        run: deno coverage ./coverage --lcov > coverage.lcov
+        run: deno coverage ./coverage --lcov > ./coverage.lcov
 
       - name: Upload to Codecov
         uses: codecov/codecov-action@v3
