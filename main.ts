@@ -45,6 +45,7 @@ const request = await createPullRequest(repository, { release: tag });
 if (request) {
   console.log(`❗ Pull request should be merged before a release:`);
   console.log(request.html_url);
+  Deno.exit(0);
 }
 
 const body = await getDefaultChangelog({ name: `${owner}/${repo}` }, { tag });
