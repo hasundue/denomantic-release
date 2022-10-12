@@ -45,7 +45,7 @@ const request = await createPullRequest(repository, { release: tag });
 if (request) {
   console.log(`❗ Pull request should be merged before a release:`);
   console.log(request.html_url);
-  Deno.exit(0);
+  Deno.exit(1);
 }
 
 const body = await getDefaultChangelog({ name: `${owner}/${repo}` }, { tag });
@@ -61,3 +61,5 @@ const { data: release } = await octokit.request(
 );
 console.log(`🚀 Release ${release.tag_name} created.`);
 console.log(release.html_url);
+
+Deno.exit(0);
