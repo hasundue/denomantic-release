@@ -1,4 +1,4 @@
-import * as semver from "https://deno.land/std@0.158.0/semver/mod.ts";
+import * as semver from "https://deno.land/std@0.159.0/semver/mod.ts";
 import * as commit from "https://deno.land/x/commit@0.1.5/mod.ts";
 import { intersect } from "https://deno.land/std@0.158.0/collections/intersect.ts";
 import { Octokit } from "https://cdn.skypack.dev/@octokit/core@4.0.5?dts";
