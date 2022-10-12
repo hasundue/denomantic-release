@@ -1,4 +1,4 @@
-import { Command } from "https://deno.land/x/cliffy@v0.25.1/command/command.ts";
+import { Command } from "https://deno.land/x/cliffy@v0.25.2/command/command.ts";
 import { getDefaultChangelog } from "https://deno.land/x/ghlog@0.3.4/mod.ts";
 import { createPullRequest } from "https://deno.land/x/denopendabot@0.1.0/mod.ts";
 import { Octokit } from "https://esm.sh/@octokit/core@4.0.5";
@@ -6,7 +6,7 @@ import { getNewVersion } from "./mod.ts";
 
 const { args, options } = await new Command()
   .name("denomantic-release")
-  .version("0.2.0") // @denopendabot hasundue/denomantic-release
+  .version("0.3.0") // @denopendabot hasundue/denomantic-release
   .description("Semantic release for Deno projects.")
   .option("-t --token <token>", "GitHub token.")
   .option("--draft", "Draft release.")
