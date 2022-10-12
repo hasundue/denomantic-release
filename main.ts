@@ -1,5 +1,6 @@
 import { Command } from "https://deno.land/x/cliffy@v0.25.1/command/command.ts";
 import { getDefaultChangelog } from "https://deno.land/x/ghlog@0.3.4/mod.ts";
+import { createPullRequest } from "https://deno.land/x/denopendabot@0.1.0/mod.ts";
 import { Octokit } from "https://esm.sh/@octokit/core@4.0.5";
 import { getNewVersion } from "./mod.ts";
 
@@ -38,6 +39,14 @@ if (!tag) {
   Deno.exit(0);
 }
 
+// check if dependencies are up to date
+console.log("👀 Checking updates on dependencies...");
+const request = await createPullRequest(repository, { release: tag });
+if (request) {
+  console.log(`❗ Pull request should be merged before a release:`);
+  console.log(request.html_url);
+}
+
 const body = await getDefaultChangelog({ name: `${owner}/${repo}` }, { tag });
 
 if (options?.dryRun) {
@@ -45,9 +54,9 @@ if (options?.dryRun) {
   Deno.exit(0);
 }
 
-const release = await octokit.request(
+const { data: release } = await octokit.request(
   "POST /repos/{owner}/{repo}/releases",
   { owner, repo, tag_name: tag, body, draft: options?.draft },
 );
-console.log(`🚀 Release ${release.data.tag_name} created.`);
-console.log(release.url);
+console.log(`🚀 Release ${release.tag_name} created.`);
+console.log(release.html_url);
