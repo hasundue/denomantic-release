@@ -20,6 +20,7 @@ const { args, options } = await new Command()
   .option("--patch <...types>", "Types for a patch release.", {
     default: ["fix"],
   })
+  .option("--no-check", "Skip an update check on dependencies.")
   .arguments("<repository>")
   .parse(Deno.args);
 
@@ -40,14 +41,19 @@ if (!tag) {
 }
 
 // check if dependencies are up to date
-console.log("👀 Checking updates on dependencies...");
-const request = await createPullRequest(repository, { release: tag });
-if (request) {
-  console.log(`❗ Pull request should be merged before a release:`);
-  console.log(request.html_url);
-  Deno.exit(1);
+if (options.check) {
+  console.log("👀 Checking updates on dependencies...");
+
+  const request = await createPullRequest(repository, { release: tag });
+
+  if (request) {
+    console.log(`❗ Pull request should be merged before a release:`);
+    console.log(request.html_url);
+    Deno.exit(1);
+  }
 }
 
+// generate a changelog by ghlog
 const body = await getDefaultChangelog({ name: `${owner}/${repo}` }, { tag });
 
 if (options?.dryRun) {
