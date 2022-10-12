@@ -63,7 +63,7 @@ if (options?.dryRun) {
 
 const { data: release } = await octokit.request(
   "POST /repos/{owner}/{repo}/releases",
-  { owner, repo, tag_name: tag, title: tag, body, draft: options?.draft },
+  { owner, repo, tag_name: tag, name: tag, body, draft: options?.draft },
 );
 console.log(`🚀 Release ${release.tag_name} created.`);
 console.log(release.html_url);
