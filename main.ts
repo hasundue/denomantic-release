@@ -1,6 +1,6 @@
 import { Command } from "https://deno.land/x/cliffy@v0.25.2/command/command.ts";
 import { getDefaultChangelog } from "https://deno.land/x/ghlog@0.3.4/mod.ts";
-import { createPullRequest } from "https://deno.land/x/denopendabot@0.1.0/mod.ts";
+import { createPullRequest } from "https://deno.land/x/denopendabot@0.2.0/mod.ts";
 import { Octokit } from "https://esm.sh/@octokit/core@4.0.5";
 import { getNewVersion } from "./mod.ts";
 
@@ -8,7 +8,8 @@ const { args, options } = await new Command()
   .name("denomantic-release")
   .version("0.4.1") // @denopendabot hasundue/denomantic-release
   .description("Semantic release for Deno projects.")
-  .option("-t --token <token>", "GitHub token.")
+  .option("-t --token <token>", "GitHub token to create a release.")
+  .option("--user-token <token>", "GitHub token to update dependencies")
   .option("--draft", "Draft release.")
   .option("--dry-run", "Don't actually create a release.")
   .option("--major <...types>", "Types for a major release.", {
@@ -24,16 +25,16 @@ const { args, options } = await new Command()
   .arguments("<repository>")
   .parse(Deno.args);
 
+const env = Deno.env.toObject();
+
+const octokit = new Octokit({
+  auth: options?.token ?? env["GITHUB_TOKEN"] ?? env["GH_TOKEN"],
+});
+
 const repository = args[0];
 const [owner, repo] = repository.split("/");
 
-const octokit = new Octokit({
-  auth: options?.token ?? Deno.env.get("GITHUB_TOKEN"),
-});
-
-const tag = await getNewVersion(owner, repo, {
-  types: options,
-});
+const tag = await getNewVersion(owner, repo, { types: options });
 
 if (!tag) {
   console.log("☕ No relevant commits found.");
@@ -44,7 +45,10 @@ if (!tag) {
 if (options.check) {
   console.log("👀 Checking updates on dependencies...");
 
-  const request = await createPullRequest(repository, { release: tag });
+  const request = await createPullRequest(repository, {
+    release: tag,
+    token: options?.userToken ?? env["GH_TOKEN"] ?? env["GITHUB_TOKEN"],
+  });
 
   if (request) {
     console.log(`❗ Pull request should be merged before a release:`);
