@@ -2,8 +2,6 @@ name: Update
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "23 23 * * *"
 
 jobs:
   update:
@@ -17,11 +15,12 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.26.0
+          deno-version: v1.26.1 # @denopendabot denoland/deno
 
       - name: Run Denopendabot
         run: >
-          deno run -A https://pax.deno.dev/hasundue/denopendabot/cli.ts
-          main.ts mod.ts test.ts
+          deno run -A https://deno.land/x/denopendabot@0.1.0/main.ts
+          ${{ github.repository }}
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
