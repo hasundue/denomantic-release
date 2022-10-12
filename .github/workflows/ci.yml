@@ -16,3 +16,4 @@ jobs:
     name: Release
     needs: test
     uses: ./.github/workflows/release.yml
+    secrets: inherit
