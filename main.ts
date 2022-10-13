@@ -1,6 +1,6 @@
 import { Command } from "https://deno.land/x/cliffy@v0.25.2/command/command.ts";
 import { getDefaultChangelog } from "https://deno.land/x/ghlog@0.3.4/mod.ts";
-import { createPullRequest } from "https://deno.land/x/denopendabot@0.5.1/mod.ts";
+import { createPullRequest } from "https://deno.land/x/denopendabot@0.5.4/mod.ts";
 import { Octokit } from "https://esm.sh/@octokit/core@4.0.5";
 import { getNewVersion } from "./mod.ts";
 
@@ -27,9 +27,9 @@ const { args, options } = await new Command()
 
 const env = Deno.env.toObject();
 
-const octokit = new Octokit({
-  auth: options?.token ?? env["GITHUB_TOKEN"] ?? env["GH_TOKEN"],
-});
+const actionToken = options?.token ?? env["GITHUB_TOKEN"];
+
+const octokit = new Octokit({ auth: actionToken });
 
 const repository = args[0];
 const [owner, repo] = repository.split("/");
@@ -47,7 +47,8 @@ if (options.check) {
 
   const request = await createPullRequest(repository, {
     release: tag,
-    token: options?.userToken ?? env["GH_TOKEN"] ?? env["GITHUB_TOKEN"],
+    token: actionToken,
+    userToken: options?.userToken,
   });
 
   if (request) {
