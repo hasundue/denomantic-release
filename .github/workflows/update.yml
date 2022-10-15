@@ -1,15 +1,22 @@
 name: Denopendabot
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * *" # modify to your convinient time
 
 jobs:
   update:
     name: Update
     runs-on: ubuntu-latest
     steps:
-      - uses: hasundue/denopendabot@0.5.7
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          deno-version: v1.26.1 # @denopendabot denoland/deno
+      - name: Run Denopendabot
+        run: >
+          deno run -q --allow-env --allow-net
+          https://pax.deno.dev/denopendabot/main.ts
+          ${{ github.repository }}
+          --token ${{ secrets.GITHUB_TOKEN }}
+          --user-token ${{ secrets.GH_TOKEN }}
