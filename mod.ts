@@ -1,6 +1,6 @@
 import * as semver from "https://deno.land/std@0.159.0/semver/mod.ts";
 import * as commit from "https://deno.land/x/commit@0.1.5/mod.ts";
-import { intersect } from "https://deno.land/std@0.159.0/collections/intersect.ts";
+import { intersect } from "https://deno.land/std@0.160.0/collections/intersect.ts";
 import { Octokit } from "https://esm.sh/@octokit/core@4.1.0";
 
 const octokit = new Octokit({ auth: Deno.env.get("GITHUB_TOKEN") });
