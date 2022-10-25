@@ -25,6 +25,7 @@ jobs:
         run: >
           deno run -q --allow-env --allow-net --allow-write ./main.ts
           ${{ github.repository }}
+          --token ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run denopendabot to update version numbers
         if: ${{ !steps.run.outputs.release }}
