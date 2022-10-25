@@ -28,6 +28,7 @@ const output = (key: string, value: string) => {
   const file = Deno.env.get("GITHUB_OUTPUT");
   if (file) {
     Deno.writeTextFileSync(file, `${key}=${value}\n`, { append: true });
+    console.log(`echo "${key}=${value}" >> $GITHUB_OUTPUT`);
   }
 };
 
