@@ -23,7 +23,7 @@ jobs:
       - name: Run denomantic-release
         id: run
         run: >
-          deno run -q --allow-env --allow-net --allow-read --allow-run ./main.ts
+          deno run -q --allow-env --allow-net --allow-write ./main.ts
           ${{ github.repository }}
 
       - name: Update version number by Denopendabot
