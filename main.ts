@@ -27,7 +27,7 @@ const { args, options } = await new Command()
 const output = (key: string, value: string) => {
   const file = Deno.env.get("GITHUB_OUTPUT");
   if (file) {
-    Deno.writeTextFileSync(file, `${key}=${value}`, { append: true });
+    Deno.writeTextFileSync(file, `${key}=${value}\n`, { append: true });
   }
 };
 
@@ -56,6 +56,7 @@ if (options.check) {
   });
   if (updates.length) {
     console.warn("❗ Version numbers should be updated before a release.");
+    output("needs_update", "true");
     Deno.exit(0);
   }
   console.log("👍 Ready to release!");
@@ -76,5 +77,5 @@ const { data: release } = await octokit.request(
 console.log(`🚀 Release ${release.tag_name} created.`);
 console.log(release.html_url);
 
-output("release", tag);
+output("released", "true");
 Deno.exit(0);

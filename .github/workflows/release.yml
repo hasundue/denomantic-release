@@ -27,8 +27,8 @@ jobs:
           ${{ github.repository }}
           --token ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run denopendabot to update version numbers
-        if: ${{ !steps.run.outputs.release }}
+      - name: Run Denopendabot to update version numbers
+        if: ${{ steps.run.outputs.needs_update }}
         uses: hasundue/denopendabot@0.7.0 # @denopendabot hasundue/denopendabot
         with:
           user-token: ${{ secrets.GH_TOKEN }}
