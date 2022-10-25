@@ -24,9 +24,14 @@ const { args, options } = await new Command()
   .arguments("<repository>")
   .parse(Deno.args);
 
-const env = Deno.env.toObject();
+const output = (key: string, value: string) => {
+  const file = Deno.env.get("GITHUB_OUTPUT");
+  if (file) {
+    Deno.writeTextFileSync(file, `${key}=${value}`, { append: true });
+  }
+};
 
-const token = options?.token ?? env["GITHUB_TOKEN"];
+const token = options?.token ?? Deno.env.get("GITHUB_TOKEN");
 const octokit = new Octokit({ auth: token });
 
 const repository = args[0];
@@ -38,11 +43,7 @@ if (!tag) {
   console.log("☕ No relevant commits found.");
   Deno.exit(0);
 }
-
-const output = Deno.env.get("GITHUB_OUTPUT");
-if (output) {
-  Deno.writeTextFile(output, `VERSION=${tag}`, { append: true });
-}
+output("VERSION", tag);
 
 // check if dependencies are up to date
 if (options.check) {
@@ -55,7 +56,7 @@ if (options.check) {
   });
   if (updates) {
     console.warn("❗ Version numbers should be updated before a release.");
-    Deno.exit(1);
+    Deno.exit(0);
   }
   console.log("👍 Ready to release!");
 }
@@ -75,4 +76,5 @@ const { data: release } = await octokit.request(
 console.log(`🚀 Release ${release.tag_name} created.`);
 console.log(release.html_url);
 
+output("RELEASE", tag);
 Deno.exit(0);

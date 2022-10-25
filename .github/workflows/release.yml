@@ -26,9 +26,9 @@ jobs:
           deno run -q --allow-env --allow-net --allow-write ./main.ts
           ${{ github.repository }}
 
-      - name: Update version number by Denopendabot
-        if: ${{ failure() }}
-        uses: peter-evans/repository-dispatch@v2
+      - name: Run denopendabot to update version numbers
+        if: ${{ !steps.run.outputs.RELEASE }}
+        uses: hasundue/denopendabot@0.7.0 # @denopendabot hasundue/denopendabot
         with:
-          event-type: denopendabot-run
-          client-payload: '{ "release": "${{ steps.run.outputs.VERSION }}" }'
+          user-token: ${{ secrets.GH_TOKEN }}
+          options: --release ${{ steps.run.outputs.VERSION }}
