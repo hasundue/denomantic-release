@@ -20,9 +20,14 @@ jobs:
         with:
           deno-version: v1.26.2 # @denopendabot denoland/deno
 
-      - name: Semantic Release
+      - name: Run denomantic-release
+        id: run
         run: >
           deno run -q --allow-env --allow-net ./main.ts
           ${{ github.repository }}
-          --token ${{ secrets.GITHUB_TOKEN }}
-          --user-token ${{ secrets.GH_TOKEN }}
+
+      - name: Update version number by Denopendabot
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          event-type: denopendabot-run
+          client-payload: '{ "release": "${{ steps.run.outputs.VERSION }}" }'
