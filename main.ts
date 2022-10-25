@@ -6,7 +6,7 @@ import { getNewVersion } from "./mod.ts";
 
 const { args, options } = await new Command()
   .name("denomantic-release")
-  .version("0.6.0") // @denopendabot hasundue/denomantic-release
+  .version("0.6.1") // @denopendabot hasundue/denomantic-release
   .description("Semantic release for Deno projects.")
   .option("-t --token <token>", "GitHub token to create a release.")
   .option("--draft", "Draft release.")
@@ -54,7 +54,7 @@ if (options.check) {
     release: tag,
     token: token,
   });
-  if (updates) {
+  if (updates.length) {
     console.warn("❗ Version numbers should be updated before a release.");
     Deno.exit(0);
   }
