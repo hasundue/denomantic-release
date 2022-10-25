@@ -1,7 +1,6 @@
 import { Command } from "https://deno.land/x/cliffy@v0.25.2/command/command.ts";
 import { getDefaultChangelog } from "https://deno.land/x/ghlog@0.3.4/mod.ts";
 import { getUpdates } from "https://deno.land/x/denopendabot@0.7.0/mod.ts";
-import { CommandBuilder } from "https://deno.land/x/dax@0.15.0/mod.ts";
 import { Octokit } from "https://esm.sh/@octokit/core@4.1.0";
 import { getNewVersion } from "./mod.ts";
 
@@ -40,8 +39,9 @@ if (!tag) {
   Deno.exit(0);
 }
 
-if (Deno.env.get("CI")) {
-  await new CommandBuilder().command(`echo "VERSION=${tag}" >> $GITHUB_OUTPUT`);
+const output = Deno.env.get("GITHUB_OUTPUT");
+if (output) {
+  Deno.writeTextFile(output, `VERSION=${tag}`, { append: true });
 }
 
 // check if dependencies are up to date
