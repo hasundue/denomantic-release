@@ -43,7 +43,7 @@ if (!tag) {
   console.log("☕ No relevant commits found.");
   Deno.exit(0);
 }
-output("VERSION", tag);
+output("version", tag);
 
 // check if dependencies are up to date
 if (options.check) {
@@ -76,5 +76,5 @@ const { data: release } = await octokit.request(
 console.log(`🚀 Release ${release.tag_name} created.`);
 console.log(release.html_url);
 
-output("RELEASE", tag);
+output("release", tag);
 Deno.exit(0);
