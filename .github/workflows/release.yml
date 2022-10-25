@@ -23,10 +23,11 @@ jobs:
       - name: Run denomantic-release
         id: run
         run: >
-          deno run -q --allow-env --allow-net ./main.ts
+          deno run -q --allow-env --allow-net --allow-run ./main.ts
           ${{ github.repository }}
 
       - name: Update version number by Denopendabot
+        if: ${{ failure() }}
         uses: peter-evans/repository-dispatch@v2
         with:
           event-type: denopendabot-run
