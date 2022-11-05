@@ -11,13 +11,13 @@ const { args, options } = await new Command()
   .option("-t --token <token>", "GitHub token to create a release.")
   .option("--draft", "Draft release.")
   .option("--dry-run", "Don't actually create a release.")
-  .option("--major <...types>", "Types for a major release.", {
+  .option("--major <types:string[]>", "Types for a major release.", {
     default: ["BREAKING"],
   })
-  .option("--minor <...types>", "Types for a minor release.", {
+  .option("--minor <types:string[]>", "Types for a minor release.", {
     default: ["feat"],
   })
-  .option("--patch <...types>", "Types for a patch release.", {
+  .option("--patch <types:string[]>", "Types for a patch release.", {
     default: ["fix"],
   })
   .option("--no-check", "Don't check the version numbers in the code.")
