@@ -8,10 +8,10 @@ on:
 jobs:
   test:
     name: Test
-    uses: ./.github/workflows/test.yml
+    uses: .github/workflows/test.yml
 
   release:
     name: Release
     needs: test
-    uses: ./.github/workflows/release.yml
+    uses: .github/workflows/release.yml
     secrets: inherit

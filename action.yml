@@ -1,0 +1,46 @@
+name: Denomantic Release
+
+description: Semantic release for Deno project
+
+inputs:
+  token:
+    description: GitHub access token authorized to run workflows
+    required: true
+    default: ${{ github.token }}
+
+  repository:
+    description: target repository
+    required: true
+    default: ${{ github.repository }}
+
+  options:
+    description: options passed through to the CLI
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.27.1 # @denopendabot denoland/deno
+
+    - id: run
+      run: >
+        deno run -q --allow-env --allow-net --allow-write ./cli.ts
+        ${{ inputs.repository }}
+        --token ${{ inputs.token }}
+        ${{ inputs.options }}
+      shell: bash
+
+outputs:
+  version:
+    description: version of the release to be created
+    value: ${{ steps.run.outputs.version }}
+
+  needs_update:
+    description: true if version numbers should be updated before release
+    value: ${{ steps.run.outputs.needs_update }}
+
+  released:
+    description: release_id if created
+    value: ${{ steps.run.outputs.released }}

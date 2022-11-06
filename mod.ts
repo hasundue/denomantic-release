@@ -23,7 +23,7 @@ const defaultVersioningOptions: VersioningOptions = {
   },
 };
 
-export async function getLatestRelease(
+async function getLatestRelease(
   owner: string,
   repo: string,
 ) {
