@@ -23,7 +23,7 @@ jobs:
       - name: Run denomantic-release
         id: run
         run: >
-          deno run -q --allow-env --allow-net --allow-write ./main.ts
+          deno run -q --allow-env --allow-net --allow-write ./cli.ts
           ${{ github.repository }}
           --token ${{ secrets.GITHUB_TOKEN }}
 
