@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Test
+    name: Module
     runs-on: ubuntu-latest
 
     steps:
@@ -39,3 +39,16 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.lcov
           fail_ci_if_error: true
+
+  action:
+    name: Action
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run action
+        uses: ./
+        with:
+          options: --dry-run --draft

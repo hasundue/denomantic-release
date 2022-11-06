@@ -1,0 +1,19 @@
+name: Integration
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  action:
+    name: Action
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run action
+        uses: ./
+        with:
+          options: --dry-run --draft
