@@ -31,5 +31,5 @@ jobs:
         if: ${{ steps.run.outputs.needs_update }}
         uses: hasundue/denopendabot@0.12.0 # @denopendabot hasundue/denopendabot
         with:
-          user-token: ${{ secrets.GH_TOKEN }}
-          options: --release ${{ steps.run.outputs.version }}
+          mode: app
+          release: ${{ steps.run.outputs.version }}
