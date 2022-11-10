@@ -13,6 +13,11 @@ inputs:
     required: true
     default: ${{ github.repository }}
 
+  denopendabot:
+    description: running mode of denopendabot ('action', 'app', or 'disabled')
+    required: true
+    default: action
+
   options:
     description: options passed through to the CLI
     required: false
@@ -31,6 +36,12 @@ runs:
         --token ${{ inputs.token }}
         ${{ inputs.options }}
       shell: bash
+
+    - uses: hasundue/denopendabot@0.12.0 # @denopendabot hasundue/denopendabot
+      if: ${{ steps.run.outputs.needs_update && inputs.denopendabot != 'disabled' }}
+      with:
+        mode: ${{ inputs.denopendabot }}
+        release: ${{ steps.run.outputs.version }}
 
 outputs:
   version:
