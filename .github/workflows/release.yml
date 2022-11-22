@@ -4,6 +4,9 @@ on:
   workflow_call:
   workflow_dispatch:
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   release:
     name: Release
@@ -25,7 +28,6 @@ jobs:
         run: >
           deno run -q --allow-env --allow-net --allow-write ./cli.ts
           ${{ github.repository }}
-          --token ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Denopendabot to update version numbers
         if: ${{ steps.run.outputs.needs_update }}
@@ -33,3 +35,4 @@ jobs:
         with:
           mode: app
           release: ${{ steps.run.outputs.version }}
+          auto-merge: any
