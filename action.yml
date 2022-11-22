@@ -31,7 +31,8 @@ runs:
 
     - id: run
       run: >
-        deno run -q --allow-env --allow-net --allow-write ./cli.ts
+        deno run -q --allow-env --allow-net --allow-write
+        https://deno.land/x/denomantic_release@0.8.0/cli.ts
         ${{ inputs.repository }}
         --token ${{ inputs.token }}
         ${{ inputs.options }}
