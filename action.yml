@@ -42,6 +42,7 @@ runs:
       with:
         mode: ${{ inputs.denopendabot }}
         release: ${{ steps.run.outputs.version }}
+        auto-merge: any
 
 outputs:
   version:
