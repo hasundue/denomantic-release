@@ -68,13 +68,13 @@ export function bumpVersion(
   if (semver.major(version) === 0) {
     // an unstable version, for which we do not bump the major version.
     const triggers = [...options.types.major, ...options.types.minor];
-    if (include(triggers)) return semver.inc(version, "minor");
+    if (include(triggers)) return semver.increment(version, "minor");
   } else {
     // a stable version.
-    if (include(options.types.major)) return semver.inc(version, "major");
-    if (include(options.types.minor)) return semver.inc(version, "minor");
+    if (include(options.types.major)) return semver.increment(version, "major");
+    if (include(options.types.minor)) return semver.increment(version, "minor");
   }
-  if (include(options.types.patch)) return semver.inc(version, "patch");
+  if (include(options.types.patch)) return semver.increment(version, "patch");
 
   return version.toString(); // no version bump.
 }
