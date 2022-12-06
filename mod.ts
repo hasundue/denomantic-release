@@ -1,6 +1,6 @@
-import * as semver from "https://deno.land/std@0.166.0/semver/mod.ts";
+import * as semver from "https://deno.land/std@0.167.0/semver/mod.ts";
 import * as commit from "https://deno.land/x/commit@0.1.5/mod.ts";
-import { intersect } from "https://deno.land/std@0.166.0/collections/intersect.ts";
+import { intersect } from "https://deno.land/std@0.167.0/collections/intersect.ts";
 import { Octokit } from "https://esm.sh/@octokit/core@4.1.0";
 
 const octokit = new Octokit({ auth: Deno.env.get("GITHUB_TOKEN") });
@@ -68,13 +68,13 @@ export function bumpVersion(
   if (semver.major(version) === 0) {
     // an unstable version, for which we do not bump the major version.
     const triggers = [...options.types.major, ...options.types.minor];
-    if (include(triggers)) return semver.inc(version, "minor");
+    if (include(triggers)) return semver.increment(version, "minor");
   } else {
     // a stable version.
-    if (include(options.types.major)) return semver.inc(version, "major");
-    if (include(options.types.minor)) return semver.inc(version, "minor");
+    if (include(options.types.major)) return semver.increment(version, "major");
+    if (include(options.types.minor)) return semver.increment(version, "minor");
   }
-  if (include(options.types.patch)) return semver.inc(version, "patch");
+  if (include(options.types.patch)) return semver.increment(version, "patch");
 
   return version.toString(); // no version bump.
 }
