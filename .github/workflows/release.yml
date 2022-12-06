@@ -18,4 +18,5 @@ jobs:
       - name: Run denomantic-release
         uses: ./
         with:
+          script: ./cli.ts
           denopendabot: app
