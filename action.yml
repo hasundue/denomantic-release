@@ -18,6 +18,11 @@ inputs:
     required: true
     default: action
 
+  script:
+    description: path to cli.ts
+    required: true
+    default: https://deno.land/x/denomantic_release@0.8.1/cli.ts
+
   options:
     description: options passed through to the CLI
     required: false
@@ -32,7 +37,7 @@ runs:
     - id: run
       run: >
         deno run -q --allow-env --allow-net --allow-write
-        https://deno.land/x/denomantic_release@0.8.1/cli.ts
+        ${{ inputs.script }}
         ${{ inputs.repository }}
         --token ${{ inputs.token }}
         ${{ inputs.options }}
