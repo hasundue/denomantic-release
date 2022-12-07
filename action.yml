@@ -43,7 +43,7 @@ runs:
         ${{ inputs.options }}
       shell: bash
 
-    - uses: hasundue/denopendabot@0.13.0 # @denopendabot hasundue/denopendabot
+    - uses: hasundue/denopendabot@0.14.0 # @denopendabot hasundue/denopendabot
       if: ${{ steps.run.outputs.needs_update && inputs.denopendabot != 'disabled' }}
       with:
         mode: ${{ inputs.denopendabot }}
