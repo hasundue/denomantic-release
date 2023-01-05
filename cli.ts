@@ -1,6 +1,6 @@
 import { Command } from "https://deno.land/x/cliffy@v0.25.6/command/command.ts";
 import { getDefaultChangelog } from "https://deno.land/x/ghlog@0.3.4/mod.ts";
-import { getUpdates } from "https://deno.land/x/denopendabot@0.14.2/mod.ts";
+import { getUpdates } from "https://deno.land/x/denopendabot@0.15.0/mod.ts";
 import { Octokit } from "https://esm.sh/@octokit/core@4.1.0";
 import { getNewVersion } from "./mod.ts";
 
