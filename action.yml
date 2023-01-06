@@ -32,7 +32,7 @@ runs:
   steps:
     - uses: denoland/setup-deno@v1
       with:
-        deno-version: v1.29.1 # @denopendabot denoland/deno
+        deno-version: v1.29.2 # @denopendabot denoland/deno
 
     - id: run
       run: >
