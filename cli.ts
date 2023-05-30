@@ -1,7 +1,7 @@
 import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/command.ts";
 import { getDefaultChangelog } from "https://deno.land/x/ghlog@0.3.4/mod.ts";
-import { getUpdates } from "https://deno.land/x/denopendabot@0.16.2/mod.ts";
-import { Octokit } from "https://esm.sh/@octokit/core@4.2.0";
+import { getUpdates } from "https://deno.land/x/denopendabot@0.16.3/mod.ts";
+import { Octokit } from "https://esm.sh/@octokit/core@4.2.1";
 import { getNewVersion } from "./mod.ts";
 
 const { args, options } = await new Command()

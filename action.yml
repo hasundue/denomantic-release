@@ -32,7 +32,7 @@ runs:
   steps:
     - uses: denoland/setup-deno@v1
       with:
-        deno-version: v1.33.2 # @denopendabot denoland/deno
+        deno-version: v1.34.0 # @denopendabot denoland/deno
 
     - id: run
       run: >
@@ -43,7 +43,7 @@ runs:
         ${{ inputs.options }}
       shell: bash
 
-    - uses: hasundue/denopendabot@0.16.2 # @denopendabot hasundue/denopendabot
+    - uses: hasundue/denopendabot@0.16.3 # @denopendabot hasundue/denopendabot
       if: ${{ steps.run.outputs.needs_update && inputs.denopendabot != 'disabled' }}
       with:
         mode: ${{ inputs.denopendabot }}
