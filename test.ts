@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.197.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.198.0/testing/asserts.ts";
 import { bumpVersion } from "./mod.ts";
 
 const test = (before: string, types: string[], after: string) =>
