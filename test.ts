@@ -1,10 +1,11 @@
+import { format } from "https://deno.land/std@0.199.0/semver/mod.ts";
 import { assertEquals } from "https://deno.land/std@0.199.0/testing/asserts.ts";
-import { bumpVersion } from "./mod.ts";
+import { bumpSemVer } from "./mod.ts";
 
 const test = (before: string, types: string[], after: string) =>
   Deno.test(`${before} + ${types} -> ${after}`, () =>
     assertEquals(
-      bumpVersion(before, types),
+      format(bumpSemVer(before, types)),
       after,
     ));
 

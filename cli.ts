@@ -38,13 +38,13 @@ const octokit = new Octokit({ auth: token });
 const repository = args[0];
 const [owner, repo] = repository.split("/");
 
-const tag = await getNewVersion(owner, repo, { types: options });
+const semver = await getNewVersion(owner, repo, { types: options });
 
-if (!tag) {
+if (!semver) {
   console.log("☕ No relevant commits found.");
   Deno.exit(0);
 }
-output("version", tag);
+output("version", semver);
 
 // check if dependencies are up to date
 if (options.check) {
@@ -52,7 +52,7 @@ if (options.check) {
     "👀 Checking if the version numbers are up-to-date in the code...",
   );
   const updates = await getUpdates(repository, {
-    release: tag,
+    release: semver,
     token: token,
   });
   if (updates.length) {
@@ -64,7 +64,10 @@ if (options.check) {
 }
 
 // generate a changelog by ghlog
-const body = await getDefaultChangelog({ name: `${owner}/${repo}` }, { tag });
+const body = await getDefaultChangelog(
+  { name: `${owner}/${repo}` },
+  { tag: semver },
+);
 
 if (options?.dryRun) {
   console.log(body);
@@ -73,7 +76,7 @@ if (options?.dryRun) {
 
 const { data: release } = await octokit.request(
   "POST /repos/{owner}/{repo}/releases",
-  { owner, repo, tag_name: tag, name: tag, body, draft: options?.draft },
+  { owner, repo, tag_name: semver, name: semver, body, draft: options?.draft },
 );
 console.log(`🚀 Release ${release.tag_name} created.`);
 console.log(release.html_url);
