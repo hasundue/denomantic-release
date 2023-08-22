@@ -1,6 +1,12 @@
-import * as semver from "https://deno.land/std@0.198.0/semver/mod.ts";
+import { intersect } from "https://deno.land/std@0.199.0/collections/intersect.ts";
+import {
+  format,
+  gt,
+  increment,
+  parse,
+  SemVer,
+} from "https://deno.land/std@0.199.0/semver/mod.ts";
 import * as commit from "https://deno.land/x/commit@0.1.5/mod.ts";
-import { intersect } from "https://deno.land/std@0.198.0/collections/intersect.ts";
 import { Octokit } from "https://esm.sh/@octokit/core@5.0.0";
 
 const octokit = new Octokit({ auth: Deno.env.get("GITHUB_TOKEN") });
@@ -58,38 +64,39 @@ async function getCommits(
   }
 }
 
-export function bumpVersion(
-  version: string | semver.SemVer,
+export function bumpSemVer(
+  version: string | SemVer,
   types: (commit.Field | undefined)[],
   options: VersioningOptions = defaultVersioningOptions,
-) {
+): SemVer {
   const include = (triggers: string[]) => intersect(types, triggers).length;
+  const semver = parse(version);
 
-  if (semver.major(version) === 0) {
+  if (semver.major === 0) {
     // an unstable version, for which we do not bump the major version.
     const triggers = [...options.types.major, ...options.types.minor];
-    if (include(triggers)) return semver.increment(version, "minor");
+    if (include(triggers)) return increment(semver, "minor");
   } else {
     // a stable version.
-    if (include(options.types.major)) return semver.increment(version, "major");
-    if (include(options.types.minor)) return semver.increment(version, "minor");
+    if (include(options.types.major)) return increment(semver, "major");
+    if (include(options.types.minor)) return increment(semver, "minor");
   }
-  if (include(options.types.patch)) return semver.increment(version, "patch");
+  if (include(options.types.patch)) return increment(semver, "patch");
 
-  return version.toString(); // no version bump.
+  return semver; // no version bump.
 }
 
 export async function getNewVersion(
   owner: string,
   repo: string,
   options: VersioningOptions = defaultVersioningOptions,
-) {
+): Promise<string | null> {
   const release = await getLatestRelease(owner, repo);
   const commits = await getCommits(owner, repo, release?.tag_name);
 
-  const version = semver.parse(release?.tag_name ?? "0.0.0");
+  const semver = parse(release?.tag_name ?? "0.0.0");
 
-  if (!version) {
+  if (!semver) {
     throw new Error(
       `The latest release tag ${
         release!.tag_name
@@ -98,7 +105,7 @@ export async function getNewVersion(
   }
 
   const types = commits.map((entry) => commit.parse(entry.message).type);
-  const newVersion = bumpVersion(version, types, options)!;
+  const newSemVer = bumpSemVer(semver, types, options)!;
 
-  return semver.gt(newVersion, version) ? newVersion : null;
+  return gt(newSemVer, semver) ? format(newSemVer) : null;
 }
