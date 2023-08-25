@@ -1,5 +1,5 @@
-import { format } from "https://deno.land/std@0.199.0/semver/mod.ts";
-import { assertEquals } from "https://deno.land/std@0.199.0/testing/asserts.ts";
+import { format } from "https://deno.land/std@0.200.0/semver/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.200.0/testing/asserts.ts";
 import { bumpSemVer } from "./mod.ts";
 
 const test = (before: string, types: string[], after: string) =>
