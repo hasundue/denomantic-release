@@ -16,4 +16,6 @@ jobs:
       - name: Run action
         uses: ./
         with:
+          script: ./cli.ts
+          assets: README.md LICENSE
           options: --dry-run --draft

@@ -16,6 +16,7 @@ inputs:
   assets:
     description: paths for assets to be uploaded
     required: false
+    type: string
 
   denopendabot:
     description: running mode of denopendabot ('action', 'app', or 'disabled')
@@ -41,9 +42,10 @@ runs:
     - id: run
       run: >
         deno run -q --allow-env --allow-net --allow-write
+        ${{ inputs.assets && '--allow-read' }}
         ${{ inputs.script }}
         ${{ inputs.repository }}
-        --token ${{ inputs.token }}
+        ${{ inputs.token && format('--token {0}', inputs.token) }}
         ${{ inputs.assets && format('--assets {0}', inputs.assets) }}
         ${{ inputs.options }}
       shell: bash
