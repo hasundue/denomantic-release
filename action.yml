@@ -54,8 +54,8 @@ runs:
         ${{ inputs.script }}
         ${{ inputs.repository }}
         ${{ inputs.token && format('--token {0}', inputs.token) }}
-        ${{ inputs.draft == 'true' && '--draft' }}
-        ${{ inputs.dry-run == 'true' && '--dry-run' }}
+        ${{ inputs.draft == 'true' && '--draft' || '' }}
+        ${{ inputs.dry-run == 'true' && '--dry-run' || '' }}
         ${{ inputs.assets && format('--assets {0}', inputs.assets) }}
       shell: bash
 
