@@ -3,15 +3,32 @@ name: Denomantic Release
 description: Semantic release for Deno project
 
 inputs:
-  token:
-    description: GitHub access token authorized to run workflows
+  script:
+    description: path to cli.ts
     required: true
-    default: ${{ github.token }}
+    default: https://deno.land/x/denomantic_release@0.10.1/cli.ts
 
   repository:
     description: target repository
     required: true
     default: ${{ github.repository }}
+
+  token:
+    description: GitHub access token authorized to run workflows
+    required: true
+    default: ${{ github.token }}
+
+  draft:
+    description: if drafting a release
+    required: false
+    type: boolean
+    default: false
+
+  dry-run:
+    description: do not actually create a release
+    required: false
+    type: boolean
+    default: false
 
   assets:
     description: paths for assets to be uploaded
@@ -22,21 +39,6 @@ inputs:
     description: running mode of denopendabot ('action', 'app', or 'disabled')
     required: true
     default: action
-
-  script:
-    description: path to cli.ts
-    required: true
-    default: https://deno.land/x/denomantic_release@0.10.2/cli.ts
-
-  draft:
-    description: if drafting a release
-    required: false
-    type: boolean
-    default: false
-
-  options:
-    description: options passed through to the CLI
-    required: false
 
 runs:
   using: composite
@@ -52,9 +54,9 @@ runs:
         ${{ inputs.script }}
         ${{ inputs.repository }}
         ${{ inputs.token && format('--token {0}', inputs.token) }}
-        ${{ inputs.assets && format('--assets {0}', inputs.assets) }}
         ${{ inputs.draft && '--draft' }}
-        ${{ inputs.options }}
+        ${{ inputs.dry-run && '--dry-run' }}
+        ${{ inputs.assets && format('--assets {0}', inputs.assets) }}
       shell: bash
 
     - uses: hasundue/denopendabot@0.17.2 # @denopendabot hasundue/denopendabot
