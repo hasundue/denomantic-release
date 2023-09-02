@@ -94,7 +94,8 @@ for (const asset of options?.assets) {
       repo,
       release_id: release.id,
       name: basename(asset),
-      data: new TextDecoder().decode(Deno.readFileSync(asset)),
+      // deno-lint-ignore no-explicit-any
+      data: Deno.readFileSync(asset) as any,
     },
   );
 }
