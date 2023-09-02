@@ -52,4 +52,5 @@ jobs:
         uses: ./
         with:
           script: ./cli.ts
-          options: --dry-run --draft
+          draft: true
+          options: --dry-run

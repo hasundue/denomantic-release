@@ -28,6 +28,11 @@ inputs:
     required: true
     default: https://deno.land/x/denomantic_release@0.9.0/cli.ts
 
+  draft:
+    description: if drafting a release
+    required: false
+    default: false
+
   options:
     description: options passed through to the CLI
     required: false
@@ -47,6 +52,7 @@ runs:
         ${{ inputs.repository }}
         ${{ inputs.token && format('--token {0}', inputs.token) }}
         ${{ inputs.assets && format('--assets {0}', inputs.assets) }}
+        ${{ inputs.draft && '--draft' }}
         ${{ inputs.options }}
       shell: bash
 
