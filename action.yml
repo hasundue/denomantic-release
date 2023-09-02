@@ -44,7 +44,7 @@ runs:
         ${{ inputs.script }}
         ${{ inputs.repository }}
         --token ${{ inputs.token }}
-        ${{ inputs.assets != '' && format('--assets {0}', inputs.assets) }}
+        ${{ inputs.assets && format('--assets {0}', inputs.assets) }}
         ${{ inputs.options }}
       shell: bash
 
