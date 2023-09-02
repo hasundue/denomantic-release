@@ -6,7 +6,7 @@ inputs:
   script:
     description: path to cli.ts
     required: true
-    default: https://deno.land/x/denomantic_release@0.10.1/cli.ts
+    default: https://deno.land/x/denomantic_release@0.10.3/cli.ts
 
   repository:
     description: target repository
