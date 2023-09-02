@@ -7,7 +7,7 @@ import { getNewVersion } from "./mod.ts";
 
 const { args, options } = await new Command()
   .name("denomantic-release")
-  .version("0.8.2") // @denopendabot hasundue/denomantic-release
+  .version("0.9.0") // @denopendabot hasundue/denomantic-release
   .description("Semantic release for Deno projects.")
   .option("-t --token <token>", "GitHub token to create a release.")
   .option("--draft", "Draft release.")
