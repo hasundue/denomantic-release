@@ -1,11 +1,11 @@
-import { intersect } from "https://deno.land/std@0.200.0/collections/intersect.ts";
+import { intersect } from "https://deno.land/std@0.201.0/collections/intersect.ts";
 import {
   format,
   gt,
   increment,
   parse,
   SemVer,
-} from "https://deno.land/std@0.200.0/semver/mod.ts";
+} from "https://deno.land/std@0.201.0/semver/mod.ts";
 import * as commit from "https://deno.land/x/commit@0.1.5/mod.ts";
 import { Octokit } from "https://esm.sh/@octokit/core@5.0.0";
 
