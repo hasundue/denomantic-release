@@ -1,3 +1,4 @@
+import { basename } from "https://deno.land/std@0.201.0/path/mod.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/command.ts";
 import { getDefaultChangelog } from "https://deno.land/x/ghlog@0.3.4/mod.ts";
 import { getUpdates } from "https://deno.land/x/denopendabot@0.17.2/mod.ts";
@@ -21,6 +22,9 @@ const { args, options } = await new Command()
     default: ["fix"],
   })
   .option("--no-check", "Don't check the version numbers in the code.")
+  .option("--assets <assets:string[]>", "Assets to upload.", {
+    default: [],
+  })
   .arguments("<repository>")
   .parse(Deno.args);
 
@@ -69,17 +73,33 @@ const body = await getDefaultChangelog(
   { tag: semver },
 );
 
+// exit if dry run
 if (options?.dryRun) {
   console.log(body);
   Deno.exit(0);
 }
 
+// create a release
 const { data: release } = await octokit.request(
   "POST /repos/{owner}/{repo}/releases",
   { owner, repo, tag_name: semver, name: semver, body, draft: options?.draft },
 );
 console.log(`🚀 Release ${release.tag_name} created.`);
 console.log(release.html_url);
+
+// upload assets
+for (const asset of options?.assets) {
+  await octokit.request(
+    "POST /repos/{owner}/{repo}/releases/{release_id}/assets{?name,label}",
+    {
+      owner,
+      repo,
+      release_id: release.id,
+      name: basename(asset),
+      data: await Deno.readFile(asset),
+    },
+  );
+}
 
 output("released", "true");
 Deno.exit(0);
